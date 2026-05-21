@@ -3,8 +3,6 @@
 > Portfolio Project • Junior AI Engineer  
 > Intelligent OCR & Multimodal Document Analysis with AI
 
-![SmartOCR Banner](https://via.placeholder.com/1200x500/0a0a0f/6c63ff?text=SmartOCR+-+AI+Document+Extraction)
-
 ---
 
 ## 🌟 Overview
