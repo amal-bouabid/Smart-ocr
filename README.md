@@ -1,168 +1,371 @@
-# SmartOCR — Extracteur Intelligent de Documents
+# SmartOCR — Intelligent Document Extraction System
 
-> Projet portfolio · AI Engineer Junior  
-> Propulsé par **Claude Opus Vision API** (Anthropic)
+> Portfolio Project • Junior AI Engineer  
+> Intelligent OCR & Multimodal Document Analysis with AI
+
+![SmartOCR Banner](https://via.placeholder.com/1200x500/0a0a0f/6c63ff?text=SmartOCR+-+AI+Document+Extraction)
 
 ---
 
-## Architecture
+## 🌟 Overview
 
-```
+**SmartOCR** is an intelligent web application designed to automatically extract, analyze, and structure information from:
+
+- images
+- PDF documents
+- invoices
+- tables
+- business cards
+- administrative documents
+
+The project leverages the multimodal capabilities of **Claude Opus Vision (Anthropic)** to visually understand documents and generate structured, usable outputs.
+
+SmartOCR transforms unstructured documents into actionable data for AI workflows, automation systems, and analytical pipelines.
+
+---
+
+## ✨ Features
+
+| Feature | Description | Export |
+|---|---|---|
+| 📄 Text Extraction | Intelligent OCR for visible text | `.txt` |
+| 📊 Table Detection | Automatic table-to-JSON conversion | `.json` |
+| 🧾 Invoice Analysis | Extract amounts, dates, references | `.json` |
+| 👤 Business Card Parsing | Extract contacts and information | `.json` |
+| 🧠 Smart Summarization | AI-generated summaries & insights | `.txt` |
+| 📑 PDF Support | Multi-page document analysis | `.txt / .json` |
+| 🌐 Modern Web Interface | Fast and intuitive upload UI | Web UI |
+
+---
+
+## 🧠 Use Cases
+
+- Document automation
+- Invoice digitization
+- Business data extraction
+- Administrative document parsing
+- AI-powered OCR workflows
+- Preprocessing for RAG systems
+- Intelligent document structuring
+
+---
+
+## 🛡️ Secure Architecture
+
+The Anthropic API key is securely stored on the backend and is never exposed to the frontend.
+
+```text
 smartocr/
-├── frontend/     ← Application React (interface utilisateur)
-├── backend/      ← Serveur Express (proxy sécurisé vers Anthropic)
-└── README.md
+├── frontend/              # React application
+├── backend/               # Secure Express API
+├── screenshots/           # Screenshots
+├── README.md
+└── .gitignore
 ```
-
-### Flux de données
-
-```
-Navigateur (React)
-      │
-      │  POST /api/ocr  { base64, mediaType, prompt }
-      ▼
-Backend Express (Node.js)       ← ANTHROPIC_API_KEY stockée ici uniquement
-      │
-      │  POST https://api.anthropic.com/v1/messages
-      ▼
-Claude Opus Vision API
-```
-
-> La clé `ANTHROPIC_API_KEY` **n'est jamais envoyée au navigateur**.
 
 ---
 
-## Fonctionnalités
+## ⚙️ Technical Architecture
 
-| Mode | Description | Export |
-|------|-------------|--------|
-| **Texte brut** | Extrait tout le texte visible | `.txt` |
-| **Tableau → JSON** | Détecte et structure les tableaux | `.json` |
-| **Facture / Reçu** | Analyse montants, dates, références | `.json` |
-| **Carte de visite / ID** | Nom, email, téléphone, adresse | `.json` |
-| **Analyse intelligente** | Résumé + structure auto-détectée | `.txt` |
+```text
+User
+    │
+    ▼
+React Frontend
+    │
+    ▼
+Secure Express Backend
+    │
+    ▼
+Anthropic Claude Vision API
+    │
+    ▼
+AI Extraction & Structuring
+```
 
 ---
 
-## Installation locale
+## 🚀 Local Installation
 
-### Prérequis
-- Node.js ≥ 16
-- Clé API Anthropic → [console.anthropic.com](https://console.anthropic.com)
+### 📋 Prerequisites
 
-### 1. Backend
+- Node.js 18+
+- npm or yarn
+- Anthropic account
+- Anthropic API key
+
+Create an API key:
+
+https://console.anthropic.com/settings/keys
+
+---
+
+## 1️⃣ Backend Setup
 
 ```bash
 cd backend
+```
+
+### Install dependencies
+
+```bash
 npm install
+```
+
+### Copy environment variables
+
+```bash
 cp .env.example .env
 ```
 
-Éditer `backend/.env` :
+### Configure `.env`
+
 ```env
-ANTHROPIC_API_KEY=sk-ant-votre-vraie-clé
+ANTHROPIC_API_KEY=sk-ant-your-api-key
 PORT=3001
 ALLOWED_ORIGIN=http://localhost:3000
 ```
 
+### Start backend server
+
 ```bash
 npm run dev
-# Serveur disponible sur http://localhost:3001
-# Test : GET http://localhost:3001/health
 ```
 
-### 2. Frontend
+Backend available at:
+
+```text
+http://localhost:3001
+```
+
+---
+
+## 2️⃣ Frontend Setup
 
 ```bash
 cd frontend
+```
+
+### Install dependencies
+
+```bash
 npm install
+```
+
+### Copy environment variables
+
+```bash
 cp .env.example .env
 ```
 
-Vérifier `frontend/.env` :
+### Configure `.env`
+
 ```env
 REACT_APP_BACKEND_URL=http://localhost:3001
 ```
 
+### Start frontend
+
 ```bash
 npm start
-# Application disponible sur http://localhost:3000
+```
+
+Application available at:
+
+```text
+http://localhost:3000
 ```
 
 ---
 
-## Déploiement production
+## 🐳 Run with Docker
 
-### Étape 1 — Déployer le Backend sur Railway
-
-1. Créer un compte sur [railway.app](https://railway.app)
-2. **New Project** → **Deploy from GitHub repo** → sélectionner le repo du backend
-3. Dans **Settings → Variables**, ajouter :
-
-   | Variable | Valeur |
-   |----------|--------|
-   | `ANTHROPIC_API_KEY` | `sk-ant-votre-clé` |
-   | `PORT` | `3001` |
-   | `ALLOWED_ORIGIN` | *(laisser vide pour l'instant, à compléter après Vercel)* |
-
-4. Dans **Settings → Networking** → **Generate Domain**
-5. Copier l'URL générée, ex : `https://smartocr-backend-production.up.railway.app`
-6. Revenir dans Variables et compléter `ALLOWED_ORIGIN` avec l'URL Vercel (étape suivante)
-
-### Étape 2 — Déployer le Frontend sur Vercel
-
-1. Créer un compte sur [vercel.com](https://vercel.com)
-2. **New Project** → **Import Git Repository** → sélectionner le repo du frontend
-3. Dans **Environment Variables**, ajouter :
-
-   | Variable | Valeur |
-   |----------|--------|
-   | `REACT_APP_BACKEND_URL` | URL Railway de l'étape 1 |
-
-4. Cliquer **Deploy**
-5. Copier l'URL Vercel générée, ex : `https://smartocr.vercel.app`
-6. Retourner sur Railway et mettre à jour `ALLOWED_ORIGIN` avec cette URL
-
-### Vérification finale
+### Build and start containers
 
 ```bash
-# Tester le backend en production
-curl https://smartocr-backend-production.up.railway.app/health
-# → { "status": "ok", "service": "smartocr-backend" }
+docker compose up --build
+```
+
+### Stop containers
+
+```bash
+docker compose down
 ```
 
 ---
 
-## Sécurité
+## 📦 Production Deployment
 
-| Mesure | Détail |
-|--------|--------|
-| **Clé API côté serveur** | Jamais dans le bundle JS du navigateur |
-| **CORS strict** | Seul le frontend déclaré peut appeler le backend |
-| **Rate limiting** | 20 requêtes / 15 min par IP |
-| **Validation des inputs** | base64, mediaType et prompt vérifiés avant envoi |
-| **`.gitignore`** | `.env` exclu des deux dépôts Git |
+### Frontend
 
----
+Recommended platforms:
 
-## Technologies
+- Vercel
+- Netlify
 
-**Frontend**
-- React 18 — composants fonctionnels + hooks custom
-- FileReader API — encodage base64 côté client
-- CSS Variables — thème sombre sans dépendance externe
+### Backend
 
-**Backend**
-- Express.js — serveur proxy léger
-- express-rate-limit — protection contre les abus
-- dotenv — gestion des variables d'environnement
+Recommended platforms:
 
-**IA**
-- Claude Opus Vision (`claude-opus-4-7`) — OCR multimodal
-- Prompt Engineering — prompts spécialisés par mode d'extraction
+- Railway
+- Render
+- Fly.io
 
 ---
 
-## Auteur
+## 🔐 Security
 
-**Amal** — AI Engineer Junior
+### Integrated Security Features
+
+- Backend-only API key protection
+- Strict input validation
+- CORS protection
+- Anti-abuse rate limiting
+- File upload validation
+- Sensitive variables excluded from Git
+- Protection against malformed requests
+
+---
+
+## 📁 Environment Variables
+
+### Backend
+
+```env
+ANTHROPIC_API_KEY=
+PORT=
+ALLOWED_ORIGIN=
+```
+
+### Frontend
+
+```env
+REACT_APP_BACKEND_URL=
+```
+
+---
+
+## 🛠️ Tech Stack
+
+### Frontend
+
+- React 18
+- JavaScript ES6+
+- CSS Variables
+- FileReader API
+- Fetch API
+
+### Backend
+
+- Node.js
+- Express.js
+- CORS
+- dotenv
+- express-rate-limit
+
+### Artificial Intelligence
+
+- Claude Opus Vision
+- Anthropic API
+- Multimodal AI OCR
+
+---
+
+## 📸 Screenshots
+
+### Main Interface
+
+```text
+Add your screenshots inside /screenshots
+```
+
+Example:
+
+```markdown
+![Home](./screenshots/home.png)
+```
+
+---
+
+## 📌 Example JSON Output
+
+```json
+{
+  "invoice_number": "INV-2026-001",
+  "date": "2026-05-20",
+  "total_amount": "450.00",
+  "vendor": "SmartTech Solutions"
+}
+```
+
+---
+
+## ⚡ Workflow
+
+1. Upload document
+2. Convert to base64
+3. Send securely to backend
+4. Claude Vision analysis
+5. Intelligent extraction
+6. Structured data returned
+
+---
+
+## 🎯 Project Goals
+
+This project was developed as part of an AI Engineering portfolio to demonstrate:
+
+- multimodal LLM integration
+- secure AI architectures
+- modern AI full-stack development
+- intelligent document structuring
+- backend/frontend best practices
+
+---
+
+## 📚 Future Improvements
+
+- Multi-language OCR support
+- CSV / Excel export
+- User authentication
+- Document history
+- Batch processing
+- Drag & drop support
+- Domain-specific prompt engineering
+- Document RAG pipeline
+
+---
+
+## 👩‍💻 Author
+
+### Amal Bouabid
+
+Junior AI Engineer  
+Computer Engineering Graduate
+
+#### Areas of Interest
+
+- Artificial Intelligence
+- LLM Engineering
+- RAG Systems
+- Computer Vision
+- NLP
+- Backend AI Systems
+
+---
+
+## 📄 License
+
+Educational and personal portfolio project.
+
+---
+
+## ⭐ Support
+
+If you like this project:
+
+- ⭐ Star the repository
+- 🍴 Fork the project
+- 🛠️ Contribute improvements
+
+---
